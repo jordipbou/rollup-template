@@ -5,13 +5,16 @@ import postcss from 'rollup-plugin-postcss'
 import livereload from 'rollup-plugin-livereload'
 import serve from 'rollup-plugin-serve'
 
+// PostCSS
+import tailwindcss from 'tailwindcss'
+
 const production = !process.env.ROLLUP_WATCH
 
 export default {
   input: 'src/main.js',
   output: {
     file: 'public/bundle.js',
-    format: 'iife',
+    format: 'umd',
     sourcemap: true,
     name: 'App'
   },
@@ -20,10 +23,11 @@ export default {
     commonjs (),
 
     postcss ({
-      config: { path: "./postcss.config.js" },
-      extensions: ['.css'],
       extract: true,
-      minimize: production
+      modules: true,
+      plugins: [
+        tailwindcss ()
+      ]
     }),
 
     !production && serve ({
